@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS categorias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    precio REAL NOT NULL CHECK (precio >= 0),
+    stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0),
+    categoria_id INTEGER NOT NULL REFERENCES categorias(id)
+);
+
+CREATE TABLE IF NOT EXISTS clientes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    correo TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS ordenes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente_id INTEGER NOT NULL REFERENCES clientes(id),
+    creado_en TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS orden_productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    orden_id INTEGER NOT NULL REFERENCES ordenes(id) ON DELETE CASCADE,
+    producto_id INTEGER NOT NULL REFERENCES productos(id),
+    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
+    unidad_precio REAL NOT NULL
+);
+
+INSERT OR IGNORE INTO categorias(nombre) VALUES ('Gatos'), ('Perros'), ('Pájaros');
