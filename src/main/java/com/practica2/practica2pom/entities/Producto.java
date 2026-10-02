@@ -38,6 +38,17 @@ public class Producto {
         stock -= cantidad;
     }
 
+    public void actualizar(String nombre, double precio, int stock, Categoria categoria) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+        this.categoria = categoria;
+    }
+
+    public void establecerStock(int stock) {
+        this.stock = stock;
+    }
+
     public Long getId() { return id; }
     public String getNombre() { return nombre; }
     public double getPrecio() { return precio; }

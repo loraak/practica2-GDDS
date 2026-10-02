@@ -27,6 +27,8 @@ public final class Dto {
             @NotNull Long clienteId,
             @NotEmpty @Valid List<OrdenItemRequest> items) {}
 
+    public record StockRequest(@NotNull @PositiveOrZero Integer stock) {}
+
     public record CategoriaResponse(Long id, String nombre) {
         public static CategoriaResponse from (Categoria c) {
             return new CategoriaResponse(c.getId(), c.getNombre());

@@ -28,18 +28,26 @@ public class VentasController {
         this.ordenRepo = ordenRepo;
     }
 
+    // :) Hay clientes -> 200, lista de clientes.
+    // :( No hay clientes -> 200, lista vacía.
     @GetMapping("/clientes")
     public ApiResponse clientes() {
         return ApiResponse.ok(clienteRepo.findAll().stream()
                 .map(Dto.ClienteResponse::from).toList());
     }
 
+    // :) Nombre y correo válidos -> 200, cliente con ID.
+    // :( Nombre vacío, correo vacío, correo con formato inválido -> 400.
+    // :( Correo duplicado -> 409.
+    // :( JSON mal formato -> 400.
     @PostMapping("/clientes")
     public ApiResponse crearCliente(@Valid @RequestBody Dto.ClienteRequest r) {
         Cliente saved = clienteRepo.save(new Cliente(r.nombre(), r.correo()));
         return ApiResponse.ok(List.of(Dto.ClienteResponse.from(saved)));
     }
 
+    // :) Órdenes con productos -> 200, lista ordenada por ID.
+    // :( No hay órdenes -> 200, lista vacía.
     @GetMapping("/ordenes")
     @Transactional(readOnly = true)
     public ApiResponse ordenes() {
@@ -47,6 +55,9 @@ public class VentasController {
                 .map(Dto.OrdenResponse::from).toList());
     }
 
+    // :) Cliente existente, 1 producto con stock o no hay stock -> 200, orden creada y stock descontado.
+    // :( clienteId nulo, items nulo, cantidad cero, cantidad mayor al stock disponible, JSOn mal hecho -> 400.
+    // :( clienteId inexistente -> 404.
     @PostMapping("/ordenes")
     @Transactional
     public ApiResponse crearOrden(@Valid @RequestBody Dto.OrdenRequest r) {
