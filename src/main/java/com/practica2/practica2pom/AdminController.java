@@ -25,6 +25,11 @@ public class AdminController {
         this.db = db;
     }
 
+    @GetMapping("/health")
+    public ApiResponse health() {
+        return ApiResponse.ok(List.of(Map.of("status", "UP")));
+    }
+
     @PostMapping("/backup")
     public ApiResponse backup() throws IOException {
         Path dir = Files.createDirectories(Path.of("backups").toAbsolutePath());
