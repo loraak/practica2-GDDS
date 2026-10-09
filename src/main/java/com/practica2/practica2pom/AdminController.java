@@ -27,7 +27,7 @@ public class AdminController {
 
     @GetMapping("/health")
     public ApiResponse health() {
-        return ApiResponse.ok(List.of(Map.of("HOLA", "EXAMEN")));
+        return ApiResponse.ok(List.of(Map.of("HOLA", 2)));
     }
 
     @PostMapping("/backup")
