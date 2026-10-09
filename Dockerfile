@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM eclipse-temurin:21-jdk-jammy AS builder
 WORKDIR /app
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
