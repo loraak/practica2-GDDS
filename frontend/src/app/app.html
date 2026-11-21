@@ -1,0 +1,10 @@
+@if (auth.usuario()) {
+  <nav>
+    <a routerLink="/productos">Productos</a>
+    <a routerLink="/usuarios">Usuarios</a>
+    <span class="spacer"></span>
+    <span data-testid="usuario-actual">{{ auth.usuario()?.nombre }}</span>
+    <button (click)="salir()" data-testid="logout">Salir</button>
+  </nav>
+}
+<main><router-outlet /></main>
