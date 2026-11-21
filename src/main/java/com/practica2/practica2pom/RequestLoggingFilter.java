@@ -31,7 +31,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
             MDC.put("path", req.getRequestURI());
             MDC.put("statusCode", String.valueOf(status));
             MDC.put("timestamp", inicio.toString());
-            MDC.put("durationMs", String.valueOf(ms));
+            MDC.put("requestTime", String.valueOf(ms));
             try {
                 String msg = "{} {} -> {} ({} ms)";
                 if (status >= 500)      log.error(msg, req.getMethod(), req.getRequestURI(), status, ms);
@@ -39,7 +39,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                 else                    log.info(msg, req.getMethod(), req.getRequestURI(), status, ms);
             } finally {
                 MDC.remove("method"); MDC.remove("path"); MDC.remove("statusCode");
-                MDC.remove("timestamp"); MDC.remove("durationMs");
+                MDC.remove("timestamp"); MDC.remove("requestTime");
             }
         }
     }

@@ -3,5 +3,5 @@
   <input name="correo" type="email" placeholder="Correo" [(ngModel)]="correo" data-testid="login-correo" required>
   <input name="password" type="password" placeholder="Contraseña" [(ngModel)]="password" data-testid="login-password" required>
   <button type="submit" data-testid="login-entrar">Entrar</button>
-  @if (error()) { <p class="error" data-testid="login-entrar">{{ error() }}</p> }
+  @if (error()) { <p class="error" data-testid="login-error">{{ error() }}</p> }
 </form>
