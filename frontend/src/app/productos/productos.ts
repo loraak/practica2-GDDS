@@ -1,13 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';          // ← esta línea
 import { FormsModule } from '@angular/forms';
 import { ApiService, Categoria, Producto, ProductoRequest } from '../api.service';
 
 @Component({
   selector: 'app-productos',
-  imports: [FormsModule],
+  imports: [FormsModule, CurrencyPipe],                    // ← y CurrencyPipe aquí
   templateUrl: './productos.html',
 })
+
 export class Productos implements OnInit {
   private api = inject(ApiService);
   productos = signal<Producto[]>([]);
