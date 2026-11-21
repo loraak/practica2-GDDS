@@ -39,13 +39,24 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
+
+      - name: Imagen del backend
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/practica2pom:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/practica2pom:${{ github.sha }}
+
+      - name: Imagen del frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/practica2-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/practica2-frontend:${{ github.sha }}
 
   deploy:
     needs: docker
@@ -57,14 +68,17 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            set -e
             docker network create obs || true
             docker network connect obs openobserve || true
+
+            # ---------- Backend (Spring Boot + agente OpenTelemetry) ----------
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/practica2pom:latest
             docker stop practica2pom || true
             docker rm practica2pom || true
             docker run -d --name practica2pom --restart unless-stopped \
               --network obs \
-              -p 80:8080 -v api-data:/data -e DB_PATH=/data/app.db \
+              -p 8080:8080 -v api-data:/data -e DB_PATH=/data/app.db \
               -e OTEL_SERVICE_NAME=practica2pom \
               -e OTEL_EXPORTER_OTLP_ENDPOINT=http://openobserve:5080/api/default \
               -e OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
@@ -75,4 +89,14 @@ jobs:
               -e OTEL_METRIC_EXPORT_INTERVAL=10000 \
               -e "OTEL_INSTRUMENTATION_LOGBACK_APPENDER_EXPERIMENTAL_CAPTURE_MDC_ATTRIBUTES=*" \
               ${{ secrets.DOCKERHUB_USERNAME }}/practica2pom:latest
-            docker image prune -f
+
+            # ---------- Frontend (Angular + Nginx) ----------
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/practica2-frontend:latest
+            docker stop practica2-frontend || true
+            docker rm practica2-frontend || true
+            docker run -d --name practica2-frontend --restart unless-stopped \
+              --network obs -p 80:80 \
+              ${{ secrets.DOCKERHUB_USERNAME }}/practica2-frontend:latest
+
+            docker image prune -a -f
+            docker ps

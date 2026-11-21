@@ -69,7 +69,7 @@ public final class Dto {
     public record UsuarioUpdateRequest(
             @NotBlank String nombre,
             @NotBlank @Email String correo,
-            @Size(min = 6) String password) {}
+            @Pattern(regexp = "^$|.{6,}", message = "debe estar vacía o tener al menos 6 caracteres") String password) {}
 
     public record LoginRequest(
             @NotBlank @Email String correo,
