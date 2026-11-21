@@ -87,4 +87,13 @@ public class CatalogoController {
         p.establecerStock(r.stock());
         return ApiResponse.ok(List.of(Dto.ProductoResponse.from(productoRepo.save(p))));
     }
+
+    // :) Existe -> 200 con el producto.
+    // :( No existe -> 404.
+    @GetMapping("/productos/{id}")
+    public ApiResponse producto(@PathVariable long id) {
+        Producto p = productoRepo.findWithCategoriaById(id)
+                .orElseThrow(() -> new NoSuchElementException("Producto no encontrado"));
+        return ApiResponse.ok(List.of(Dto.ProductoResponse.from(p)));
+    }
 }

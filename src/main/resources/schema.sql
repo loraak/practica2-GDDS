@@ -32,3 +32,11 @@ CREATE TABLE IF NOT EXISTS orden_productos (
 );
 
 INSERT OR IGNORE INTO categorias(nombre) VALUES ('Gatos'), ('Perros'), ('Pájaros');
+
+CREATE TABLE IF NOT EXISTS usuarios (
+                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        nombre TEXT NOT NULL,
+                                        correo TEXT NOT NULL UNIQUE,
+                                        password TEXT NOT NULL
+);
+

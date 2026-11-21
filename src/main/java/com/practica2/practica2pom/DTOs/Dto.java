@@ -60,4 +60,25 @@ public final class Dto {
             return new OrdenResponse(o.getId(), o.getCreadoEn(), o.getCliente().getNombre(), items, total);
         }
     }
+
+    public record UsuarioRequest(
+            @NotBlank String nombre,
+            @NotBlank @Email String correo,
+            @NotBlank @Size(min = 6) String password) {}
+
+    public record UsuarioUpdateRequest(
+            @NotBlank String nombre,
+            @NotBlank @Email String correo,
+            @Size(min = 6) String password) {}
+
+    public record LoginRequest(
+            @NotBlank @Email String correo,
+            @NotBlank String password) {}
+
+    public record UsuarioResponse(Long id, String nombre, String correo) {
+        public static UsuarioResponse from(Usuario u) {
+            return new UsuarioResponse(u.getId(), u.getNombre(), u.getCorreo());
+        }
+    }
 }
+

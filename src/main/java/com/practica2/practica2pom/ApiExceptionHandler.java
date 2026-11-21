@@ -46,4 +46,9 @@ public class ApiExceptionHandler {
     public ResponseEntity<ApiResponse> conflict(DataAccessException e) {
         return err(HttpStatus.CONFLICT, "Dato duplicado o referencia invalida");
     }
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ApiResponse> unauthorized(CredencialesInvalidasException e) {
+        return err(HttpStatus.UNAUTHORIZED, e.getMessage());
+    }
 }

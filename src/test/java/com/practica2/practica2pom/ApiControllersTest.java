@@ -609,4 +609,34 @@ class ApiControllersTest {
                     """))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void getProductoPorId_ok() throws Exception {
+        Producto p = prod(1L, "Croquetas", 250.5, 10, cat("Gatos"));
+        when(productoRepo.findWithCategoriaById(1L)).thenReturn(Optional.of(p));
+
+        mvc.perform(get("/api/productos/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.statusCode").value(200))
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[0].nombre").value("Croquetas"))
+                .andExpect(jsonPath("$.data[0].categoria").value("Gatos"));
+    }
+
+    @Test
+    void getProductoPorId_noExiste_404() throws Exception {
+        when(productoRepo.findWithCategoriaById(99L)).thenReturn(Optional.empty());
+
+        mvc.perform(get("/api/productos/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.statusCode").value(404))
+                .andExpect(jsonPath("$.data[0].error").value("Producto no encontrado"));
+    }
+
+    @Test
+    void getProductoPorId_idNoNumerico_400() throws Exception {
+        mvc.perform(get("/api/productos/abc"))
+                .andExpect(status().isBadRequest());
+    }
+
 }
