@@ -1,0 +1,35 @@
+<h2>Productos</h2>
+
+<form class="card fila" (ngSubmit)="guardar()">
+  <input name="nombre" placeholder="Nombre" [(ngModel)]="form.nombre" data-testid="prod-nombre" required>
+  <input name="precio" type="number" placeholder="Precio" [(ngModel)]="form.precio" data-testid="prod-precio" required>
+  <input name="stock" type="number" placeholder="Stock" [(ngModel)]="form.stock" data-testid="prod-stock">
+  <select name="categoriaId" [(ngModel)]="form.categoriaId" data-testid="prod-categoria">
+    @for (c of categorias(); track c.id) { <option [ngValue]="c.id">{{ c.nombre }}</option> }
+  </select>
+  <button type="submit" data-testid="prod-guardar">{{ editandoId() ? 'Actualizar' : 'Agregar' }}</button>
+  @if (editandoId()) { <button type="button" (click)="cancelar()">Cancelar</button> }
+</form>
+
+@if (error()) { <p class="error" data-testid="prod-error">{{ error() }}</p> }
+
+<table data-testid="tabla-productos">
+  <thead><tr><th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Categoría</th><th></th></tr></thead>
+  <tbody>
+    @for (p of productos(); track p.id) {
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.nombre }}</td>
+        <td>{{ p.precio | currency:'MXN' }}</td>
+        <td>{{ p.stock }}</td>
+        <td>{{ p.categoria }}</td>
+        <td>
+          <button (click)="editar(p)" data-testid="prod-editar">Editar</button>
+          <button (click)="eliminar(p.id)" data-testid="prod-eliminar">Eliminar</button>
+        </td>
+      </tr>
+    } @empty {
+      <tr><td colspan="6">Sin productos</td></tr>
+    }
+  </tbody>
+</table>
