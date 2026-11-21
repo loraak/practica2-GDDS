@@ -9,6 +9,7 @@ import com.practica2.practica2pom.repositorios.ProductoRepository;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -69,6 +70,7 @@ public class CatalogoController {
     }
 
     @PutMapping("/productos/{id}")
+    @Transactional
     public ApiResponse actualizarProducto(@PathVariable long id,
                                           @Valid @RequestBody Dto.ProductoRequest r) {
         Producto p = productoRepo.findById(id)
@@ -80,6 +82,7 @@ public class CatalogoController {
     }
 
     @PatchMapping("/productos/{id}/stock")
+    @Transactional
     public ApiResponse actualizarStock(@PathVariable long id,
                                        @Valid @RequestBody Dto.StockRequest r) {
         Producto p = productoRepo.findById(id)
