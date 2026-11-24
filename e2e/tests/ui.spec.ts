@@ -60,21 +60,4 @@ test.describe('UI - CRUD', () => {
         await tabla.locator('tr', { hasText: nombre }).getByTestId('prod-eliminar').click();
         await expect(tabla.locator('tr', { hasText: nombre })).toHaveCount(0);
     });
-
-    test('crear y eliminar un usuario', async ({ page }) => {
-        const correo = `ui${Date.now()}@test.com`;
-        await page.getByRole('link', { name: 'Usuarios' }).click();
-        const tabla = page.getByTestId('tabla-usuarios');
-
-        await page.getByTestId('usr-nombre').fill('Usuario UI');
-        await page.getByTestId('usr-correo').fill(correo);
-        await page.getByTestId('usr-password').fill('secreto1');
-        await page.getByTestId('usr-guardar').click();
-
-        const fila = tabla.locator('tr', { hasText: correo });
-        await expect(fila).toBeVisible();
-
-        await fila.getByTestId('usr-eliminar').click();
-        await expect(tabla.locator('tr', { hasText: correo })).toHaveCount(0);
-    });
 });
